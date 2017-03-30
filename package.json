@@ -1,0 +1,25 @@
+{
+  "name": "restful",
+  "version": "1.0.0",
+  "description": "teste restful",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "test app for web api web services"
+  ],
+  "author": "Luciano Faria",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "helmet": "^3.5.0",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.9.0",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
+    "validator": "^7.0.0"
+  }
+}
