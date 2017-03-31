@@ -1,43 +1,56 @@
-// Load required packages
-var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
 var User = require('../model/user.js');
 var jwt    = require('jsonwebtoken');
 var config = require('../config.js');
 
-passport.use(new BasicStrategy(
-  function(username, password, callback) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return callback(err); }
+exports.isAuthenticated = function(req, res, next) {
+    User.findOne({ username: req.body.username }, function (err, user) {
+      if (err) {         
+          res.json({
+            success: false,
+            message: err
+          });
+     }
 
       // No user found with that username
-      if (!user) { return callback(null, false); }
+      if (!user) { 
+          res.json({
+            success: false,
+            message: err
+          }); 
+        }
 
       // Make sure the password is correct
-      user.verifyPassword(password, function(err, isMatch) {
-        if (err) { return callback(err); }
+      user.verifyPassword(req.body.password, function(err, isMatch) {
+        if (err) { 
+            res.json({
+                success: false,
+                message: err
+            }); 
+        }
 
         // Password did not match
-        if (!isMatch) { return callback(null, false); }
+        if (!isMatch) {
+            res.json({
+                success: false,
+                message: ''
+            }); 
+        }
 
         // Success
-        return callback(null, user);
+        next();
       });
     });
-  }
-));
 
-exports.isAuthenticated = passport.authenticate('basic', { session : false });
+
+    
+};
 
 exports.getToken = function(req, res) {
-    var token = jwt.sign(req.user._id, config.secret, { 
-          expiresIn: '1 day' // expires in 24 hours
-        });
+    var token = jwt.sign({ data: req.body.username }, config.secret, { expiresIn: '2d' });
 
         // return the information including token as JSON
         res.json({
           success: true,
-          message: 'Enjoy your token!',
           token: token
         });
 };

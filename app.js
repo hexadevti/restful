@@ -8,14 +8,13 @@ var validator = require('validator'); // validate SQL injection on requests
 var user = require('./controller/user.js');
 var client = require('./controller/client.js');
 
-var passport = require('passport');
 var authController = require('./controller/auth');
 
 app.get('/', function(req, res) {
 	res.json({ message: 'Server Active!'});
 });
 
-app.get('/auth', authController.isAuthenticated, authController.getToken);
+app.post('/auth', authController.isAuthenticated, authController.getToken);
 
 app.get('/users', authController.verifyToken, user.all);
 
