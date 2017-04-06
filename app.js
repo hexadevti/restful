@@ -6,27 +6,21 @@ db.on('error', console.error.bind(console, 'Erro ao conectar base de dados'));
 
 var validator = require('validator'); // validate SQL injection on requests
 var user = require('./controller/user.js');
-var client = require('./controller/client.js');
 
 var authController = require('./controller/auth');
 
 app.get('/', function(req, res) {
-	res.json({ message: 'Server Active!'});
+	res.json({ return: 'Server Active!'});
 });
 
 app.post('/auth', authController.isAuthenticated, authController.getToken);
 
 app.get('/users', authController.verifyToken, user.all);
 
-app.get('/users/:id', user.item);
+app.get('/users/:id', authController.verifyToken, user.item);
 
 app.post('/users', user.save);	
 
-app.put('/users/:id', user.update);	
+app.put('/users/:id', authController.verifyToken, user.update);	
 
-app.delete('/users/:id',  user.delete);	
-
-app.post('/clients', client.save);
-
-app.get('/clients', client.item);
-
+app.delete('/users/:id', authController.verifyToken, user.delete);	

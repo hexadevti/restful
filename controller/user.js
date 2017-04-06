@@ -29,17 +29,20 @@ var users = module.exports = {
     save : 
         function (req, res) {
             new User({
-                username: validator.trim(validator.escape(req.body.username)),
-                email: validator.trim(validator.escape(req.body.email)),
-                password: validator.trim(validator.escape(req.body.password)),
+                username: validator.trim(validator.escape(req.body.params.username)),
+                email: validator.trim(validator.escape(req.body.params.email)),
+                password: validator.trim(validator.escape(req.body.params.password)),
                 created_at: new Date()
             }).save(function(error, user) {
                 if (error) {
                     res.json({
-                        error: 'Não foi possível salvar user'
+                        success: false,
+                        return: 'Operation Failed!'
                     });
                 } else {
-                    res.json(user);
+                    res.json({ 
+                                success: true,
+                                return: user });
                 }
 
 	        })
@@ -47,9 +50,9 @@ var users = module.exports = {
     update :
         function (req, res) {
             var id = req.params.id;
-            var username = req.body.username;
-            var email = req.body.email;
-            var password = req.body.password;
+            var username = req.body.params.username;
+            var email = req.body.params.email;
+            var password = req.body.params.password;
 
             User.findById(validator.trim(validator.escape(id)), function(error, user) {
                 if (username)
@@ -62,7 +65,7 @@ var users = module.exports = {
                 user.save(function(error, user) {
                     if (error) {
                     res.json({
-                        error: 'Não foi possível salvar user'
+                        return: 'Não foi possível salvar user'
                     });
                 } else {
                     res.json(user);
@@ -75,11 +78,11 @@ var users = module.exports = {
             var id = validator.trim(validator.escape(req.params.id));
             User.findById(id, function(error, user) {
                 if (error) {
-                    res.json({ error: 'Não foi possível recuperar usuários'});
+                    res.json({ return: 'Não foi possível recuperar usuários'});
                 } else {
                     user.remove(function(error) {
                         if (!error) {
-                            res.json({ message: 'Usuário removido com sucesso' });
+                            res.json({ return: 'Usuário removido com sucesso' });
                         }
                     });
                 }
