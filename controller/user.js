@@ -26,6 +26,19 @@ var users = module.exports = {
                 }
 	        });
         },
+    me :
+        function (req, res) {
+            if (req.decoded) {
+                User.findOne({ username: req.decoded.data }, function(error, user) {
+                    if (error) {
+                        res.json({ error: 'Não foi possível recuperar usuários'});
+                    } else {
+                        user.password = "";
+                        res.json(user);
+                    }
+                });
+            }
+        },        
     save : 
         function (req, res) {
             new User({

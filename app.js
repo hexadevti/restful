@@ -19,6 +19,8 @@ app.get('/users', authController.verifyToken, user.all);
 
 app.get('/users/:id', authController.verifyToken, user.item);
 
+app.get('/me', authController.verifyToken, user.me);
+
 app.post('/users', user.save);	
 
 app.put('/users/:id', authController.verifyToken, user.update);	
